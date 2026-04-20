@@ -26,6 +26,58 @@
     </div>
 </div>
 
+<!-- <hr/>
+<h2>Comments</h2>
+
+<div class="d-flex flex-column gap-3">
+    {% for comment in comments %}
+        <div class="d-flex flex-column">
+            <h4> {{comment.name}} </h4>
+            <p> {{comment.content}} </p>
+        </div>
+
+    {% endfor %}
+</div> -->
+
+<!-- <hr/>
+<h2>Comments</h2>
+
+<div class="d-flex flex-column gap-3">
+    {% for comment in comments %}
+    <div class="card p-3">
+        <h5 class="card-title">{{ comment.name }}</h5>
+        <p class="card-text">{{ comment.content }}</p>
+        <small class="text-muted">{{ comment.created_at}}</small>
+    </div>
+    {% empty %}
+        <p class="text-muted">No comments yet. Be the first!</p>
+    {% endfor %}
+</div> -->
+
+    <h2 class="mt-5">Add comment</h2>
+<form class="d-flex flex-column gap-2 mt-4" action="{% url 'plants:add_comment_view' plant.id%}" method="post">
+    {% csrf_token %}
+    <input class="form-control" name="name" placeholder="Your Name" required minlength="3" />
+    <textarea class="form-control" name="content" placeholder="Write your comment..." required></textarea>
+    <button type="submit" class="btn btn-success">Add Comment</button>
+</form>
+
+
+<hr/>
+<h2>Comments</h2>
+
+<div class="d-flex flex-column gap-3">
+    {% for comment in comments %}
+    <div class="card p-3">
+        <h5 class="card-title">{{ comment.name }}</h5>
+        <p class="card-text">{{ comment.content }}</p>
+        <small class="text-muted">{{ comment.created_at}}</small>
+    </div>
+    {% empty %}
+        <p class="text-muted">No comments yet. Be the first!</p>
+    {% endfor %}
+</div>
+
 <!-- Related Plants -->
 <hr />
 <h2 class="mt-4">Related Plants</h2>
