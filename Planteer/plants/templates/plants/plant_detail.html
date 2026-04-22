@@ -19,6 +19,17 @@
         <h5>Used For:</h5>
         <p>{{ plant.used_for }}</p>
         <h5>Edible: {% if plant.is_edible %} <i class="bi bi-check-lg"> Yes </i>{% else %} <i class="bi bi-x-lg"> No </i> {% endif %}</h5>
+
+        <h5>Native to:</h5>
+        <div class="d-flex gap-2 flex-wrap">
+            {% for country in plant.countries.all %}
+                <span class="fi fi-{{ country.flag }}"></span> {{ country.name }}
+        {% empty %}
+        <p class="text-muted">No countries added yet.</p>
+        {% endfor %}
+        </div>
+
+
         <div class="d-flex gap-2 mt-3">
             <a href="{% url 'plants:update_view' plant.id %}" class="btn btn-primary">Update</a>
             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
@@ -65,6 +76,13 @@
 
 <hr/>
 <h2>Comments</h2>
+
+<!-- <div style="display: inline-flex; align-items: center; gap: 6px;">
+    <span class="fi fi-sa"></span>
+    <span>Saudi Arabia</span>
+</div> -->
+
+
 
 <div class="d-flex flex-column gap-3">
     {% for comment in comments %}

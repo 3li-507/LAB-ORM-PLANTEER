@@ -112,6 +112,14 @@ footer h5 {
     color: #2e7d32;
 }
 
+.form-check{
+    width: 150px;
+}
+
+.border-color{
+    background-color: #e1dcdc;
+    
+}
 /* footer {
     background-color: #212529;
     color: #adb5bd;
