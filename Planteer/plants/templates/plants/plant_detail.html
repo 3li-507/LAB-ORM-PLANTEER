@@ -18,78 +18,48 @@
         <hr />
         <h5>Used For:</h5>
         <p>{{ plant.used_for }}</p>
-        <h5>Edible: {% if plant.is_edible %} <i class="bi bi-check-lg"> Yes </i>{% else %} <i class="bi bi-x-lg"> No </i> {% endif %}</h5>
+        <h5>Edible: {% if plant.is_edible %}<i class="bi bi-check-lg"> Yes </i>{% else %}<i class="bi bi-x-lg"> No </i>{% endif %}</h5>
 
         <h5>Native to:</h5>
         <div class="d-flex gap-2 flex-wrap">
             {% for country in plant.countries.all %}
                 <span class="fi fi-{{ country.flag }}"></span> {{ country.name }}
-        {% empty %}
-        <p class="text-muted">No countries added yet.</p>
-        {% endfor %}
+            {% empty %}
+                <p class="text-muted">No countries added yet.</p>
+            {% endfor %}
         </div>
 
-
         <div class="d-flex gap-2 mt-3">
-            <a href="{% url 'plants:update_view' plant.id %}" class="btn btn-primary">Update</a>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            {% if request.user.is_staff %}
+                <a href="{% url 'plants:update_view' plant.id %}" class="btn btn-primary">Update</a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<!-- <hr/>
-<h2>Comments</h2>
-
-<div class="d-flex flex-column gap-3">
-    {% for comment in comments %}
-        <div class="d-flex flex-column">
-            <h4> {{comment.name}} </h4>
-            <p> {{comment.content}} </p>
-        </div>
-
-    {% endfor %}
-</div> -->
-
-<!-- <hr/>
-<h2>Comments</h2>
-
-<div class="d-flex flex-column gap-3">
-    {% for comment in comments %}
-    <div class="card p-3">
-        <h5 class="card-title">{{ comment.name }}</h5>
-        <p class="card-text">{{ comment.content }}</p>
-        <small class="text-muted">{{ comment.created_at}}</small>
-    </div>
-    {% empty %}
-        <p class="text-muted">No comments yet. Be the first!</p>
-    {% endfor %}
-</div> -->
-
-    <h2 class="mt-5">Add comment</h2>
-<form class="d-flex flex-column gap-2 mt-4" action="{% url 'plants:add_comment_view' plant.id%}" method="post">
-    {% csrf_token %}
-    <input class="form-control" name="name" placeholder="Your Name" required minlength="3" />
-    <textarea class="form-control" name="content" placeholder="Write your comment..." required></textarea>
-    <button type="submit" class="btn btn-success">Add Comment</button>
-</form>
-
-
+<!-- Comments -->
 <hr/>
 <h2>Comments</h2>
 
-<!-- <div style="display: inline-flex; align-items: center; gap: 6px;">
-    <span class="fi fi-sa"></span>
-    <span>Saudi Arabia</span>
-</div> -->
-
-
+{% if request.user.is_authenticated %}
+    <form class="d-flex flex-column gap-2 mb-4" action="{% url 'plants:add_comment_view' plant.id %}" method="POST">
+        {% csrf_token %}
+        <textarea class="form-control" name="content" placeholder="Write your comment..." required></textarea>
+        <button type="submit" class="btn btn-success">Add Comment</button>
+    </form>
+{% else %}
+    <div class="alert alert-warning">
+        <a href="{% url 'accounts:sign_in' %}">Sign in</a> to add a comment.
+    </div>
+{% endif %}
 
 <div class="d-flex flex-column gap-3">
     {% for comment in comments %}
     <div class="card p-3">
-        <h5 class="card-title">{{ comment.name }}</h5>
+        <h5 class="card-title">{{ comment.user.username }}</h5>
         <p class="card-text">{{ comment.content }}</p>
-        <small class="text-muted">{{ comment.created_at}}</small>
+        <small class="text-muted">{{ comment.created_at|date:"Y-m-d" }}</small>
     </div>
     {% empty %}
         <p class="text-muted">No comments yet. Be the first!</p>
@@ -113,7 +83,7 @@
         </div>
     </div>
     {% empty %}
-    <p class="text-muted">No related plants found.</p>
+        <p class="text-muted">No related plants found.</p>
     {% endfor %}
 </div>
 

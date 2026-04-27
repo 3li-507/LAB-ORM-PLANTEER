@@ -38,8 +38,10 @@ def all_view(request: HttpRequest):
 #         "countries":Country.objects.all()
 #         })
 def new_view(request: HttpRequest):
+    if not request.user.is_staff:
+        return redirect("main:home_view")
+    
     form = PlantForm()
-
     if request.method == "POST":
         form = PlantForm(request.POST, request.FILES)
         if form.is_valid():
@@ -66,6 +68,9 @@ def detail_view(request: HttpRequest, plant_id: int):
 
 
 def update_view(request: HttpRequest, plant_id: int):
+    if not request.user.is_staff:
+        return redirect("main:home_view")
+
     plant = Plant.objects.get(pk=plant_id)
     form = PlantForm(instance=plant)
 
@@ -87,6 +92,8 @@ def update_view(request: HttpRequest, plant_id: int):
 # def delete_view(request: HttpRequest, plant_id: int):
 #     return render(request, "plants/plant_detail.html")
 def delete_view(request:HttpRequest, plant_id:int):
+    if not request.user.is_staff:
+        return redirect("main:home_view")
 
     plant = Plant.objects.get(pk=plant_id)
     plant.delete()
@@ -105,7 +112,7 @@ def search_view(request: HttpRequest):
 def add_comment_view(request:HttpRequest,plant_id:int):
     if request.method== "POST":
         plant_ob = Plant.objects.get(pk=plant_id)
-        new_comment=Comment(plant=plant_ob,name=request.POST['name'],content=request.POST['content'])
+        new_comment=Comment(plant=plant_ob,user=request.user,content=request.POST['content'])
         new_comment.save()
 
     return redirect ("plants:detail_view", plant_id=plant_id)
